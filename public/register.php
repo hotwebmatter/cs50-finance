@@ -13,7 +13,10 @@
     // else if user reached page via POST (as by submitting a form via POST)
     else if ($_SERVER["REQUEST_METHOD"] == "POST")
     {
-        // TODO
+        if (empty($_POST["username"]) || empty($_POST["password"])
+        {
+            apologize("Please provide a valid username and password.");
+        }
     }
 
 ?>
