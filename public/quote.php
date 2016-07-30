@@ -21,9 +21,15 @@
 
         // Look up that stock
         $s = lookup($_POST["symbol"]);
-
-        //  ???
-        // Profit
+        
+        // if symbol not found, apologize
+        if ($s === false)
+        {
+            apologize("Symbol not found.");
+        }
+        
+        // else render quote
+        render("quote.php", $s);
 
     }
 
