@@ -45,9 +45,11 @@
 
         $rows = CS50::query("SELECT LAST_INSERT_ID() AS id");
           $id = $rows[0]["id"];
+        //  dump($rows);
 
         // remember that user's now logged in by storing user's ID in session
-        $_SESSION["id"] = $row["id"];
+        $_SESSION["id"] = $id;
+        // dump($_SESSION);
   
         // redirect to portfolio
         redirect("/");
