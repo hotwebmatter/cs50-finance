@@ -54,24 +54,6 @@
         // redirect to portfolio
         redirect("/");
 
-/*      // check password
- *      if (count($rows) == 1)
- *      {
- *          // first (and only) row
- *          $row = $rows[0];
- *
- *          // compare hash of user's input against hash that's in database
- *          if (password_verify($_POST["password"], $row["hash"]))
- *          {
- *              // remember that user's now logged in by storing user's ID in session
- *              $_SESSION["id"] = $row["id"];
- *
- *              // redirect to portfolio
- *              redirect("/");
- *          }
- *      }
- */
- 
         // else apologize
         apologize("Invalid username and/or password.");
     }
