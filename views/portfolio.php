@@ -18,9 +18,13 @@
                 <td><?= $position["symbol"] ?></td>
                 <td><?= $position["name"] ?></td>
                 <td><?= $position["shares"] ?></td>
-                <td><?= $position["price"] ?></td>
-                <td><?= $position["total"] ?></td>
+                <td>$<?= $position["price"] ?></td>
+                <td>$<?= $position["total"] ?></td>
             </tr>
         <?php endforeach ?>
+            <tr>
+                <td colspan="4">CASH</td>
+                <td>$<?= $cash ?></td>
+            </tr>
         </tbody>
     </table>

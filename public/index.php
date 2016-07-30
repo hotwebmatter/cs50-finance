@@ -17,13 +17,17 @@
                 "symbol" => $row["symbol"],
                 "name" => $stock["name"],
                 "shares" => $row["shares"],
-                "price" => $stock["price"],
-                "total" => $row["shares"] * $stock["price"]
+                "price" => number_format($stock["price"], 2),
+                "total" => number_format($row["shares"] * $stock["price"], 2)
             ];
         }
     }
 
+    // look up user's cash balance
+    $rows = CS50::query("SELECT cash FROM users WHERE id = ?", $_SESSION["id"]);
+    $cash = number_format($rows[0]["cash"], 2);
+
     // render portfolio
-    render("portfolio.php", ["positions" => $positions, "title" => "Portfolio"]);
+    render("portfolio.php", ["positions" => $positions, "cash" => $cash, "title" => "Portfolio"]);
 
 ?>
