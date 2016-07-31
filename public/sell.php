@@ -14,7 +14,11 @@
         foreach ($rows as $row)
         {
             $stock = lookup($row["symbol"]);
-            if ($stock !== false)
+            if ($stock == false)
+            {
+                apologize("Symbol not found.");
+            }
+            else
             {
                 $positions[] = [
                     "symbol" => $row["symbol"],
