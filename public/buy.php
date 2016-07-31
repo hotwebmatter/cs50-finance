@@ -34,33 +34,44 @@
         // if valid, buy that stock
         $symbol = strtoupper($_POST["symbol"]);
         
-        $rows = CS50::query("SELECT shares FROM portfolios WHERE user_id = ? AND symbol = ?", $_SESSION["id"], $symbol);
+        // look up user's cash balance
+        $rows = CS50::query("SELECT cash FROM users WHERE id = ?", $_SESSION["id"]);
+        $cash = $rows[0]["cash"];
         
-        if (count($rows) == 1)
+//        $rows = CS50::query("SELECT shares FROM portfolios WHERE user_id = ? AND symbol = ?", $_SESSION["id"], $symbol);
+//        
+//        if (count($rows) == 1)
+//        {
+//            $stock = lookup($_POST["symbol"]);
+//            if ($stock !== false)
+//            {
+//                $value = $_POST["shares"] * $stock["price"];
+//                $result = CS50::query("UPDATE portfolios SET shares = shares + ? WHERE user_id = ? AND symbol = ?", $_POST["shares"], $_SESSION["id"], $symbol);
+//                if ($result === false)
+//                {
+//                    apologize("ERROR: Could not access the database to add stock.");
+//                }
+//                $result = CS50::query("UPDATE users SET cash = cash - ? WHERE id = ?", $value, $_SESSION["id"]);
+//                if ($result === false)
+//                {
+//                    apologize("ERROR: Could not access the database to debit cash.");
+//                }
+//            }
+//        }
+//        else if (count($rows) == 0)
+//        {
+        $stock = lookup($symbol);
+        if ($stock !== false)
         {
-            $stock = lookup($_POST["symbol"]);
-            if ($stock !== false)
+            $value = $_POST["shares"] * $stock["price"];
+                
+            // can user afford this purchase?
+            if ($value > $cash)
             {
-                $value = $_POST["shares"] * $stock["price"];
-                $result = CS50::query("UPDATE portfolios SET shares = shares + ? WHERE user_id = ? AND symbol = ?", $_POST["shares"], $_SESSION["id"], $symbol);
-                if ($result === false)
-                {
-                    apologize("ERROR: Could not access the database to add stock.");
-                }
-                $result = CS50::query("UPDATE users SET cash = cash - ? WHERE id = ?", $value, $_SESSION["id"]);
-                if ($result === false)
-                {
-                    apologize("ERROR: Could not access the database to debit cash.");
-                }
+                apologize("You cannot afford this purchase.");
             }
-            
-        }
-        else if (count($rows) == 0)
-        {
-            $stock = lookup($symbol);
-            if ($stock !== false)
+            else
             {
-                $value = $_POST["shares"] * $stock["price"];
                 $result = CS50::query("INSERT INTO portfolios (user_id, symbol, shares) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE shares = shares + VALUES(shares)", $_SESSION["id"], $symbol, $_POST["shares"]);
                 if ($result === false)
                 {
@@ -72,12 +83,13 @@
                     apologize("ERROR: Could not access the database to debit cash.");
                 }
             }
+        }
             
-        }
-        else
-        {
-            apologize("Something went wrong, quite unexpectedly! :P");
-        }
+//        }
+//        else
+//        {
+//            apologize("Something went wrong, quite unexpectedly! :P");
+//        }
 
         // look up user's updated stock portfolio
         $rows = CS50::query("SELECT * FROM portfolios WHERE user_id = ? ORDER BY symbol", $_SESSION["id"]);
@@ -99,7 +111,7 @@
             }
         }
     
-        // look up user's cash balance
+        // look up user's updated cash balance
         $rows = CS50::query("SELECT cash FROM users WHERE id = ?", $_SESSION["id"]);
         $cash = number_format($rows[0]["cash"], 2);
     
