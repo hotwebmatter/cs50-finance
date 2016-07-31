@@ -42,15 +42,15 @@
             if ($stock !== false)
             {
                 $value = $_POST["shares"] * $stock["price"];
-                $result = CS50::query("UPDATE users SET cash = cash - ? WHERE id = ?", $value, $_SESSION["id"]);
-                if ($result === false)
-                {
-                    apologize("ERROR: Could not access the database to debit cash.");
-                }
                 $result = CS50::query("UPDATE portfolios SET shares = shares + ? WHERE user_id = ? AND symbol = ?", $_POST["shares"], $_SESSION["id"], $_POST["symbol"]);
                 if ($result === false)
                 {
                     apologize("ERROR: Could not access the database to add stock.");
+                }
+                $result = CS50::query("UPDATE users SET cash = cash - ? WHERE id = ?", $value, $_SESSION["id"]);
+                if ($result === false)
+                {
+                    apologize("ERROR: Could not access the database to debit cash.");
                 }
             }
             
@@ -61,15 +61,15 @@
             if ($stock !== false)
             {
                 $value = $_POST["shares"] * $stock["price"];
+                $result = CS50::query("INSERT INTO portfolios (user_id, symbol, shares) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE shares = shares + VALUES(shares)", $_SESSION["id"], $_POST["symbol"], $_POST["shares"]);
+                if ($result === false)
+                {
+                    apologize("ERROR: Could not access the database to add stock.");
+                }
                 $result = CS50::query("UPDATE users SET cash = cash - ? WHERE id = ?", $value, $_SESSION["id"]);
                 if ($result === false)
                 {
                     apologize("ERROR: Could not access the database to debit cash.");
-                }
-                $result = CS50::query("INSERT INTO portfolios (user_id, symbol, shares) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE shares = shares + VALUES(shares)", $_POST["symbol"], $_POST["shares"], $_SESSION["id"]);
-                if ($result === false)
-                {
-                    apologize("ERROR: Could not access the database to add stock.");
                 }
             }
             
