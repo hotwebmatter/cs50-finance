@@ -34,7 +34,7 @@
         // if valid, buy that stock
         $symbol = strtoupper($_POST["symbol"]);
         
-        $rows = CS50::query("SELECT shares FROM portfolios WHERE user_id = ? AND symbol = ?", $_SESSION["id"], $_POST["symbol"]);
+        $rows = CS50::query("SELECT shares FROM portfolios WHERE user_id = ? AND symbol = ?", $_SESSION["id"], $symbol);
         
         if (count($rows) == 1)
         {
@@ -42,7 +42,7 @@
             if ($stock !== false)
             {
                 $value = $_POST["shares"] * $stock["price"];
-                $result = CS50::query("UPDATE portfolios SET shares = shares + ? WHERE user_id = ? AND symbol = ?", $_POST["shares"], $_SESSION["id"], $_POST["symbol"]);
+                $result = CS50::query("UPDATE portfolios SET shares = shares + ? WHERE user_id = ? AND symbol = ?", $_POST["shares"], $_SESSION["id"], $symbol);
                 if ($result === false)
                 {
                     apologize("ERROR: Could not access the database to add stock.");
@@ -57,11 +57,11 @@
         }
         else if (count($rows) == 0)
         {
-            $stock = lookup($_POST["symbol"]);
+            $stock = lookup($symbol);
             if ($stock !== false)
             {
                 $value = $_POST["shares"] * $stock["price"];
-                $result = CS50::query("INSERT INTO portfolios (user_id, symbol, shares) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE shares = shares + VALUES(shares)", $_SESSION["id"], $_POST["symbol"], $_POST["shares"]);
+                $result = CS50::query("INSERT INTO portfolios (user_id, symbol, shares) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE shares = shares + VALUES(shares)", $_SESSION["id"], $symbol, $_POST["shares"]);
                 if ($result === false)
                 {
                     apologize("ERROR: Could not access the database to add stock.");
