@@ -4,7 +4,7 @@
     require("../includes/config.php"); 
 
     // look up user's stock portfolio
-    $rows = CS50::query("SELECT * FROM portfolios WHERE user_id = ?", $_SESSION["id"]);
+    $rows = CS50::query("SELECT * FROM portfolios WHERE user_id = ? ORDER BY symbol", $_SESSION["id"]);
     
     // if 
     $positions = [];
