@@ -62,6 +62,11 @@
                 {
                     apologize("ERROR: Could not access the database to delete stock.");
                 }
+                $result = CS50::query("INSERT INTO history (user_id, transaction, datetime, symbol, shares, price) VALUES(?, 'SELL', NOW(), ?, ?, ?)", $_SESSION["id"], $_POST["symbol"], $rows[0]["shares"], $stock["price"]);
+                if ($result === false)
+                {
+                    apologize("ERROR: Could not access the database to log transaction.");
+                }
             }
             
             // look up user's updated stock portfolio
