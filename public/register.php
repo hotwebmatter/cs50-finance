@@ -49,7 +49,7 @@
         }
         
         // otherwise, register user
-        $result = CS50::query("INSERT IGNORE INTO users (username, email, hash, cash) VALUES(?, ?, 10000.0000)", $_POST["username"], $_POST["email"], password_hash($_POST["password"], PASSWORD_DEFAULT));
+        $result = CS50::query("INSERT IGNORE INTO users (username, email, hash, cash) VALUES(?, ?, ?, 10000.0000)", $_POST["username"], $_POST["email"], password_hash($_POST["password"], PASSWORD_DEFAULT));
         if ($result === false)
         {
             apologize("ERROR: Could not register new user.");
