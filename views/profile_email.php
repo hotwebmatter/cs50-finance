@@ -11,10 +11,10 @@
         </div>
         <div class="form-group">
         <div class="form-group">
-            <input class="form-control" name="email" placeholder="Email" type="text"/>
+            <input class="form-control" name="email" placeholder="Email" type="password"/>
         </div>
         <div class="form-group">
-            <input class="form-control" name="emailconfirm" placeholder="Confirm Email" type="text"/>
+            <input class="form-control" name="emailconfirm" placeholder="Confirm Email" type="password"/>
         </div>
         <div class="form-group">
             <button class="btn btn-default" type="submit">
