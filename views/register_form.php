@@ -10,6 +10,13 @@
             <input class="form-control" name="confirmation" placeholder="Confirm Password" type="password"/>
         </div>
         <div class="form-group">
+        <div class="form-group">
+            <input class="form-control" name="email" placeholder="Email" type="password"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="emailconfirm" placeholder="Confirm Email" type="password"/>
+        </div>
+        <div class="form-group">
             <button class="btn btn-default" type="submit">
                 <span aria-hidden="true" class="glyphicon glyphicon-log-in"></span>
                 Register
