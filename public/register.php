@@ -26,6 +26,18 @@
         {
             apologize("Passwords do not match!");
         }
+        else if (empty($_POST["email"]) || empty($_POST["emailconfirm"]))
+        {
+            apologize("You must provide an email address.");
+        }
+        else if ($_POST["email"] != $_POST["emailconfirm"])
+        {
+            apologize("Email addresses do not match!");
+        }
+        else if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL))
+        {
+            apologize("Invalid email address.")
+        }
 
         // query database for user
         $rows = CS50::query("SELECT * FROM users WHERE username = ?", $_POST["username"]);
@@ -37,7 +49,7 @@
         }
         
         // otherwise, register user
-        $result = CS50::query("INSERT IGNORE INTO users (username, hash, cash) VALUES(?, ?, 10000.0000)", $_POST["username"], password_hash($_POST["password"], PASSWORD_DEFAULT));
+        $result = CS50::query("INSERT IGNORE INTO users (username, email, hash, cash) VALUES(?, ?, 10000.0000)", $_POST["username"], $_POST["email"], password_hash($_POST["password"], PASSWORD_DEFAULT));
         if ($result === false)
         {
             apologize("ERROR: Could not register new user.");
