@@ -36,7 +36,7 @@
         }
         else if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL))
         {
-            apologize("Invalid email address.")
+            apologize("Invalid email address.");
         }
 
         // query database for user
