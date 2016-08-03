@@ -51,22 +51,27 @@
             $stock = lookup($rows[0]["symbol"]);
             if ($stock !== false)
             {
+                // add cash to user's balance
                 $value = $rows[0]["shares"] * $stock["price"];
                 $result = CS50::query("UPDATE users SET cash = cash + ? WHERE id = ?", $value, $_SESSION["id"]);
                 if ($result === false)
                 {
                     apologize("ERROR: Could not access the database to add cash.");
                 }
+                // delete stock from portfolio
                 $result = CS50::query("DELETE FROM portfolios WHERE user_id = ? AND symbol = ?", $_SESSION["id"], $_POST["symbol"]);
                 if ($result === false)
                 {
                     apologize("ERROR: Could not access the database to delete stock.");
                 }
+                // log transaction in history
                 $result = CS50::query("INSERT INTO history (user_id, transaction, datetime, symbol, shares, price) VALUES(?, 'SELL', NOW(), ?, ?, ?)", $_SESSION["id"], $_POST["symbol"], $rows[0]["shares"], $stock["price"]);
                 if ($result === false)
                 {
                     apologize("ERROR: Could not access the database to log transaction.");
                 }
+                // email user a receipt -- see http://php.net/manual/en/function.mail.php
+                
             }
             
             // look up user's updated stock portfolio
