@@ -10,8 +10,8 @@
             <input class="form-control" name="new_confirmation" placeholder="Confirm New Password" type="password"/>
         </div>
         <div class="form-group">
+            <input type="hidden" name="referer" value="password_reset_action">
             <button class="btn btn-default" type="submit">
-                <span aria-hidden="true" class="glyphicon glyphicon-log-in"></span>
                 Change Password
             </button>
         </div>
