@@ -57,7 +57,8 @@
                 }
                 else
                 {
-                    $dump = password_hash($_POST["old_password"], PASSWORD_DEFAULT);
+                    $newhash = password_hash($_POST["old_password"], PASSWORD_DEFAULT);
+                    $dump = password_hash($newhash);
                     dump(["oldp" => $_POST["old_password"], "oldp_db_hash" => $row["hash"], "oldp_newhash" => $dump]);
                     // $result = CS50::query("UPDATE users SET hash = ? WHERE id = ?"), password_hash($_POST["new_password"], PASSWORD_DEFAULT), $_SESSION["id"]);
                     if ($result === false)
@@ -85,42 +86,19 @@
             {
                 apologize("Invalid email address.");
             }
-            
-            // compare hash of user's input against hash that's in database
-            if (password_verify($_POST["password"], $row["hash"]))
+            else
             {
                 
             }
-    
-            // query database for user
-            $rows = CS50::query("SELECT * FROM users WHERE username = ?", $_POST["username"]);
-    
-            // if we found user, do not register
-            if (count($rows) == 1)
-            {
-                apologize("Username is already taken.");
-            }
-            
-            // otherwise, register user
-            $result = CS50::query("INSERT IGNORE INTO users (username, email, hash, cash) VALUES(?, ?, ?, 10000.0000)", $_POST["username"], $_POST["email"], password_hash($_POST["password"], PASSWORD_DEFAULT));
+            // otherwise, update email
+            $result = CS50::query("UPDATE users SET email = ? WHERE id = ?", $_POST["email"], $_SESSION["id"]);
             if ($result === false)
             {
-                apologize("ERROR: Could not register new user.");
+                apologize("ERROR: Could not update email address.");
             }
     
-            $rows = CS50::query("SELECT LAST_INSERT_ID() AS id");
-              $id = $rows[0]["id"];
-            //  dump($rows);
-    
-            // remember that user's now logged in by storing user's ID in session
-            $_SESSION["id"] = $id;
-            // dump($_SESSION);
-      
-            // redirect to portfolio
-            redirect("/");
-    
-            // else apologize
-            apologize("Invalid username and/or password.");
+            // redirect to profile
+            redirect("/profile.php");
         }
     }
 

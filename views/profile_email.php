@@ -7,6 +7,7 @@
             <input class="form-control" name="emailconfirm" placeholder="Confirm Email" type="text"/>
         </div>
         <div class="form-group">
+            <input type="hidden" name="referer" value="email_reset_action">
             <button class="btn btn-default" type="submit">
                 Change Email
             </button>
