@@ -5,6 +5,7 @@
 
     // look up user in database
     $profile = CS50::query("SELECT username, email, cash FROM users WHERE id = ?", $_SESSION["id"]);
+    $profile[0]["cash"] = number_format($profile[0]["cash"], 2);
     
     // if user reached page via GET (as by clicking a link or via redirect)
     if ($_SERVER["REQUEST_METHOD"] == "GET")
@@ -16,12 +17,21 @@
     // else if user reached page via POST (as by submitting a form via POST)
     else if ($_SERVER["REQUEST_METHOD"] == "POST")
     {
-        if ($_POST["referer"] == "password_reset_form")
+        if ($_POST["referer"] == "add_cash")
+        {
+            // add random cash
+            $windfall = random_int(1,1000000) / 100.0;
+            $result = CS50::query("UPDATE users SET cash = cash + ? WHERE id = ?", $windfall, $_SESSION["id"]);
+            // Cash added successfully, redirect to profile
+            redirect("/profile.php");
+
+        }
+        else if ($_POST["referer"] == "password_reset_form")
         {
             // render password reset form
             render("profile_password.php", ["title" => "Reset Password"]);
         }
-        if ($_POST["referer"] == "email_reset_form")
+        else if ($_POST["referer"] == "email_reset_form")
         {
             // render email reset form
             render("profile_email.php", ["title" => "Update Email"]);
@@ -57,19 +67,19 @@
                 }
                 else
                 {
-                    $newhash = password_hash($_POST["old_password"], PASSWORD_DEFAULT);
-                    $dump = password_hash($newhash);
-                    dump(["oldp" => $_POST["old_password"], "oldp_db_hash" => $row["hash"], "oldp_newhash" => $dump]);
-                    // $result = CS50::query("UPDATE users SET hash = ? WHERE id = ?"), password_hash($_POST["new_password"], PASSWORD_DEFAULT), $_SESSION["id"]);
+                    $newhash = password_hash($_POST["new_password"], PASSWORD_DEFAULT);
+                    $result = CS50::query("UPDATE users SET hash = ? WHERE id = ?", $newhash, $_SESSION["id"]);
                     if ($result === false)
                     {
                         apologize("ERROR: Could not update password.");
                     }
+                    // Password updated successfully, redirect to profile
+                    redirect("/profile.php");
                 }
             }
             else
             {
-                apologize("ERROR: Unkown user.");
+                apologize("ERROR: Unknown user.");
             }
         }
         else if ($_POST["referer"] == "email_reset_action")
@@ -88,17 +98,15 @@
             }
             else
             {
-                
+                // otherwise, update email
+                $result = CS50::query("UPDATE users SET email = ? WHERE id = ?", $_POST["email"], $_SESSION["id"]);
+                if ($result === false)
+                {
+                    apologize("ERROR: Could not update email address.");
+                }
+                // Email updated successfully, redirect to profile
+                redirect("/profile.php");
             }
-            // otherwise, update email
-            $result = CS50::query("UPDATE users SET email = ? WHERE id = ?", $_POST["email"], $_SESSION["id"]);
-            if ($result === false)
-            {
-                apologize("ERROR: Could not update email address.");
-            }
-    
-            // redirect to profile
-            redirect("/profile.php");
         }
     }
 
