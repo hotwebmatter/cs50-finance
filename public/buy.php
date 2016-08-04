@@ -34,9 +34,11 @@
         // if valid, buy that stock
         $symbol = strtoupper($_POST["symbol"]);
         
-        // look up user's cash balance
-        $rows = CS50::query("SELECT cash FROM users WHERE id = ?", $_SESSION["id"]);
+        // look up user's cash balance, username and email address
+        $rows = CS50::query("SELECT cash, username, email FROM users WHERE id = ?", $_SESSION["id"]);
         $cash = $rows[0]["cash"];
+        $username = $rows[0]["username"];
+        $email = $rows[0]["email"];
         
         // look up current value of shares requested
         $stock = lookup($symbol);
@@ -70,7 +72,33 @@
                     apologize("ERROR: Could not access the database to log transaction.");
                 }
                 // email user a receipt -- see http://php.net/manual/en/function.mail.php
-                
+                if ($_POST["shares"] == 1)
+                {
+                    $purchase = "{$_POST["shares"]} share";
+                }
+                else if ($_POST["shares"] > 1)
+                {
+                    $purchase = "{$_POST["shares"]} shares";
+                }
+                else
+                {
+                    $purchase = ", somehow, less than one share";
+                }
+                $message = "Congratualations, {$username}!\r\nYou just purchased {$purchase} share(s) of stock in {$stock["name"]} ({$symbol}) for \${$value}.\r\nThanks for using CS50 Finance!";
+                $subject = "CS50 Finance: {$symbol} Purchase";
+                $headers = "From: matt@hotwebmatter.com" . "\r\n" . "Reply-To: matt@hotwebmatter.com" . "\r\n" . "X-Mailer: PHP/" . phpversion();
+                $mailarray[] = [
+                    "recipient" => $email,
+                    "subject" => $subject,
+                    "headers" => $headers,
+                    "message" => $message
+                    ];
+                dump($mailarray);
+                // $result = mail($email, $subject, $message, $headers);
+                // if ($result === false)
+                // {
+                //     apologize("ERROR: Could not send confirmation email.");
+                // }
             }
         }
             
