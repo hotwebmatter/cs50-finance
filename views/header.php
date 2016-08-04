@@ -31,7 +31,7 @@
 
             <div id="top">
                 <div>
-                    <a href="/"><img alt="C$50 Finance" src="/img/logo.png"/></a>
+                    <a href="/"><img alt="C$50 Finance" src="/img/logo2.png"/></a>
                 </div>
                 <?php if (!empty($_SESSION["id"])): ?>
                     <ul class="nav nav-pills">
