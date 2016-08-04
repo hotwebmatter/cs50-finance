@@ -2,6 +2,9 @@
 
     // configuration
     require("../includes/config.php"); 
+    
+    // phpmailer configuration
+    require("libphp-phpmailer/class.phpmailer.php");
 
     // if user reached page via GET (as by clicking a link or via redirect)
     if ($_SERVER["REQUEST_METHOD"] == "GET")
@@ -38,7 +41,7 @@
         $rows = CS50::query("SELECT cash, username, email FROM users WHERE id = ?", $_SESSION["id"]);
         $cash = $rows[0]["cash"];
         $username = $rows[0]["username"];
-        $email = $rows[0]["email"];
+        $recipient = $rows[0]["email"];
         
         // look up current value of shares requested
         $stock = lookup($symbol);
@@ -84,16 +87,35 @@
                 {
                     $purchase = ", somehow, less than one share";
                 }
-                $message = "Congratualations, {$username}!\r\nYou just purchased {$purchase} share(s) of stock in {$stock["name"]} ({$symbol}) for \${$value}.\r\nThanks for using CS50 Finance!";
+                $message = "Congratualations, {$username}!\r\nYou just purchased {$purchase} of stock in {$stock["name"]} ({$symbol}) for \${$value}.\r\nThanks for using CS50 Finance!";
                 $subject = "CS50 Finance: {$symbol} Purchase";
-                $headers = "From: matt@hotwebmatter.com" . "\r\n" . "Reply-To: matt@hotwebmatter.com" . "\r\n" . "X-Mailer: PHP/" . phpversion();
-                $mailarray[] = [
-                    "recipient" => $email,
-                    "subject" => $subject,
-                    "headers" => $headers,
-                    "message" => $message
-                    ];
-                dump($mailarray);
+                $headers = "From: cs50@hotwebmatter.com" . "\r\n" . "Reply-To: cs50@hotwebmatter.com" . "\r\n" . "X-Mailer: PHP/" . phpversion();
+
+                $mail = new PHPMailer();
+                $mail->IsSMTP();
+                $mail->SMTPDebug = 1;
+                $mail->SMTPAuth = true;
+                $mail->SMTPSecure = "tls";
+                $mail->Host = "smtp.gmail.com"; // change to your email host
+                $mail->Port = 587; // change to your email port
+                $mail->Username = "cs50@hotwebmatter.com"; // change to your username
+                $mail->Password = "v1kCjsvLYytrBTGV"; // change to your email password
+                $mail->setFrom("cs50@hotwebmatter.com"); // change to your email password
+                $mail->AddAddress($recipient); // change to user's email address
+                $mail->Subject = $subject; // change to email's subject
+                $mail->Body = $message; // change to email's body, add the needed link here
+
+                if ($mail->Send() == false)
+                {
+                    apologize("Error: Couldn't send confirmation email.");
+                }
+                // $mailarray[] = [
+                //     "recipient" => $recipient,
+                //     "subject" => $subject,
+                //     "headers" => $headers,
+                //     "message" => $message
+                //     ];
+                // dump($mailarray);
                 // $result = mail($email, $subject, $message, $headers);
                 // if ($result === false)
                 // {
