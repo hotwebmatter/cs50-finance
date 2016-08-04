@@ -21,7 +21,7 @@
                             <button class="btn btn-default" type="submit">
                                 Change Password
                             </button>
-                        </div>
+                        </span>
                     </fieldset>
                 </form>
             </td>
@@ -33,7 +33,7 @@
                             <button class="btn btn-default" type="submit">
                                 Change Email
                             </button>
-                        </div>
+                        </span>
                     </fieldset>
                 </form>            
             </td>
@@ -45,7 +45,7 @@
                             <button class="btn btn-default" type="submit">
                                 Add Cash
                             </button>
-                        </div>
+                        </span>
                     </fieldset>
                 </form>            
             </td>

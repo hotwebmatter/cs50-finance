@@ -76,6 +76,7 @@
                 }
                 // look up username, email and new cash balance
                 $userdata = CS50::query("SELECT cash, username, email FROM users WHERE id = ?", $_SESSION["id"]);
+                $userdata = $userdata[0];
                 $cash = number_format($userdata["cash"], 2);
                 $username = $userdata["username"];
                 $recipient = $userdata["email"];
@@ -89,11 +90,11 @@
                 }
                 else
                 {
-                    $purchase = ", somehow, less than one share";
+                    $purchase = ", somehow, less than one share";  // obviously, this is a programming joke. can't happen. ;)
                 }
                 // email user a receipt -- see http://php.net/manual/en/function.mail.php
-                $message = "Congratualations, {$username}!\r\nYou just sold {$purchase} of stock in {$stock["name"]} ({$symbol}) for \${$value}.\r\nThanks for using CS50 Finance!";
-                $subject = "CS50 Finance: {$symbol} Sale";
+                $message = "Congratualations, {$username}!\r\nYou just sold {$purchase} of stock in {$stock["name"]} ({$row["symbol"]}) for \${$value}.\r\nThanks for using CS50 Finance!";
+                $subject = "CS50 Finance: {$row["symbol"]} Sale";
                 $headers = "From: cs50@hotwebmatter.com" . "\r\n" . "Reply-To: cs50@hotwebmatter.com" . "\r\n" . "X-Mailer: PHP/" . phpversion();
 
                 $mail = new PHPMailer();
