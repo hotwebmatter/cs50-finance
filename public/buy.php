@@ -74,7 +74,7 @@
                 {
                     apologize("ERROR: Could not access the database to log transaction.");
                 }
-                // email user a receipt -- see http://php.net/manual/en/function.mail.php
+                // email user a receipt
                 if ($_POST["shares"] == 1)
                 {
                     $purchase = "{$_POST["shares"]} share";
