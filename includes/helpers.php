@@ -111,6 +111,7 @@
             "price" => floatval($data[2])
         ];
     }
+    
     /**
      * Random integer function used to add cash.
      * Based on code from http://php.net/manual/en/function.random-int.php
